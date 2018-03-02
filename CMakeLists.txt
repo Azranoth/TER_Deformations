@@ -7,7 +7,7 @@ find_package(ASTex)
 add_definitions(-DTEMPO_PATH=std::string\(\"${ASTEX_TEMPO_PATH}/\"\) )
 
 
-set( exec_list  Deform_rotation Deform_common)
+set( exec_list Deform_rotation Deform_stretch Deform_common)
 
 foreach(exec ${exec_list})
 	add_executable(${exec} ${exec}.cpp)
@@ -18,4 +18,4 @@ endforeach(exec)
 set_target_properties(${exec_list} PROPERTIES FOLDER tests)
 
 # nice vs solution
-set_target_properties( Deform_rotation Deform_common PROPERTIES FOLDER tutorials)
+set_target_properties( Deform_rotation Deform_stretch Deform_common PROPERTIES FOLDER tutorials)
