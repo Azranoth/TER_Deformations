@@ -16,9 +16,9 @@ ImageRGBAu8 DeformRotation::RotateRBGAAreaMapping(const ImageRGBAu8 img, double 
     double rad = angle*M_PI/180;
 
     // For each pixel in the output image
-    for(uint32_t j = 0; j < newImg.height(); j++){
+    for(uint32_t j = 0; j < (uint32_t)newImg.height(); j++){
 
-        for(uint32_t i = 0; i < newImg.width(); i++){
+        for(uint32_t i = 0; i < (uint32_t)newImg.width(); i++){
 
             double newR = 0., newG = 0., newB = 0.;
 
@@ -48,17 +48,17 @@ ImageRGBAu8 DeformRotation::RotateRBGAAreaMapping(const ImageRGBAu8 img, double 
                 double Ry = realY - c0.second;
                 uint32_t y = (int)(Ry/(1./subPixels));
 
-                newR = (1./(subPixels*subPixels)) * ( ((subPixels - x)     * (subPixels - y) * p0.GetRed())
+                newR = (1./(subPixels*subPixels)) * ( ((subPixels - x)    * (subPixels - y) * p0.GetRed())
                                                           + (x            * (subPixels - y) * p2.GetRed())
                                                           + (y            * (subPixels - x) * p1.GetRed())
                                                           + (x            * y               * p3.GetRed()));
 
-                newG = (1./(subPixels*subPixels)) * ( ((subPixels - x)     * (subPixels - y) * p0.GetGreen())
+                newG = (1./(subPixels*subPixels)) * ( ((subPixels - x)    * (subPixels - y) * p0.GetGreen())
                                                           + (x            * (subPixels - y) * p2.GetGreen())
                                                           + (y            * (subPixels - x) * p1.GetGreen())
                                                           + (x            * y               * p3.GetGreen()));
 
-                newB = (1./(subPixels*subPixels)) * ( ((subPixels - x)     * (subPixels - y) * p0.GetBlue())
+                newB = (1./(subPixels*subPixels)) * ( ((subPixels - x)    * (subPixels - y) * p0.GetBlue())
                                                           + (x            * (subPixels - y) * p2.GetBlue())
                                                           + (y            * (subPixels - x) * p1.GetBlue())
                                                           + (x            * y               * p3.GetBlue()));
@@ -79,10 +79,11 @@ ImageRGBAu8 DeformRotation::resizeImage(const ImageRGBAu8 img){
 
 
     int minX = -1, minY = -1, maxX = -1, maxY = -1;
-    for(uint32_t j = 0; j < img.height(); j++){
+
+    for(uint32_t j = 0; j < (uint32_t)img.height(); j++){
 
         // ---- Get the min & max coordinates in the image
-        for(uint32_t i = 0; i < img.width(); i++){
+        for(uint32_t i = 0; i < (uint32_t)img.width(); i++){
 
             ImageRGBAu8::PixelType p = img.pixelAbsolute(i, j);
 
@@ -106,9 +107,9 @@ ImageRGBAu8 DeformRotation::resizeImage(const ImageRGBAu8 img){
     resImg.initItk  (maxX-minX+1, maxY-minY+1, false);
 
     // ----- Extract the region between the min & max coordinates
-    for(uint32_t j = minY; j <= maxY; j++){
+    for(uint32_t j = minY; j <= (uint32_t)maxY; j++){
 
-        for(uint32_t i = minX; i <= maxX; i++){
+        for(uint32_t i = minX; i <= (uint32_t)maxX; i++){
 
             ImageRGBAu8::PixelType p = img.pixelAbsolute(i, j);
             resImg.pixelAbsolute(i-minX, j-minY) = p;
@@ -121,31 +122,23 @@ ImageRGBAu8 DeformRotation::resizeImage(const ImageRGBAu8 img){
 
 
 
-
-/*
-template<typename IMG_T>
-static IMG_T DeformRotation::RotateRBGA(const IMG_T img){
-
-}*/
-
-
 int main(int argc, char* argv[]){
 
 
     ImageRGBAu8 image, image_out;
 
-    bool ok = image.load(TEMPO_PATH+"single-leaf-photo-03.jpg");
-    //bool ok = image.load(TEMPO_PATH+"quilting_input8.png");
+    //bool ok = image.load(TEMPO_PATH+"single-leaf-photo-03.jpg");
+    bool ok = image.load(TEMPO_PATH+"quilting_input.png");
     //bool ok = image.load(TEMPO_PATH+"simpleRGB.png");
     if (!ok)
         return 1;
 
     image.setCenter(image.width()/2, image.height()/2);
 
-    image_out = DeformRotation::RotateRBGAAreaMapping(image, 25.);
+    image_out = DeformRotation::RotateRBGAAreaMapping(image, 35.);
     image_out = DeformRotation::resizeImage(image_out);
 
-    image_out.save(TEMPO_PATH+"Deform-leaf25.png");
+    image_out.save(TEMPO_PATH+"Deform-quilting35.png");
 
     return 0;
 }
